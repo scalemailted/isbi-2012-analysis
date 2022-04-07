@@ -1,1 +1,1 @@
-# isbi-2012-analysis
+# ISBI 2012 Analysis

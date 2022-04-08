@@ -1,5 +1,6 @@
-# ISBI 2012 Analysis of U-Net Architectures
+
 # CSCI6633 - Group 3
+## ISBI 2012 Analysis of U-Net Architectures
 
 ## Dependencies (Tested with Python 3.10)
 - tensorflow

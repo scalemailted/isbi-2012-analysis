@@ -1,18 +1,10 @@
 # ----------------------------------------------------
 #[ 1 ]
-import matplotlib.pyplot as plt
 import pandas as pd
-import seaborn as sns
-import json
-
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 from utils import *
 from model.data_loader import *
-from model.unet_baseline import unet
-from model.unet_ternaus import ternausNet16
-from model.unet_ternaus_tweaked import ternausNet16_tweaked
-from model.unet_pix2pix import unet_pix2pix
+from model.unet_dcunet import DCUNet
 
 # ----------------------------------------------------
 #[ 2 ]
@@ -21,49 +13,6 @@ train_pth = 'data/membrane/train'
 test_pth = 'data/membrane/test'
 results_pth = 'results/'
 pretrained_pth = 'pretrained/'
-
-# ----------------------------------------------------
-# Experiment A – baseline
-# Train the original unet model on the full 512px dataset until overfitting.
-# ----------------------------------------------------
-#[ 3 ]
-# Full available image size
-img_sz = (512, 512, 1)
-batch_sz = 2
-
-# Models
-models = [
-    ['unet_baseline', unet, dict(input_size=img_sz, transpose=True)]
-]
-
-# Data loaders
-train_loader = loader(train_pth, input_generator_train, target_generator_train, 
-                      batch_sz=batch_sz, img_sz=img_sz[:2])
-test_loader = loader(test_pth, input_generator_test, target_generator_test, 
-                     batch_sz=batch_sz, img_sz=img_sz[:2])
-
-# ----------------------------------------------------
-#[ 4 ]
-# Results csv saved with this filename
-test_title = '512px_500steps_10epochs'
-
-# Experiment configuration
-training_params = dict(
-    train_steps=500, 
-    val_steps=100, 
-    epochs=10, 
-    iterations=1, 
-    lr=1e-4
-)
-
-# Train models and record results
-for model in models:
-    print(f'\nTESTING MODEL: {model[0]}')
-    save_pth = f'{pretrained_pth}{model[0]}_{test_title}.h5'
-    results = test_model(model[1], train_loader, test_loader, **training_params, 
-                         model_params=model[2], save_pth=save_pth)
-    results_df = hists2df(results)
-    results_df.to_csv(f'{results_pth}{model[0]}_{test_title}.csv')
 
 # ----------------------------------------------------
 # Experiment B – Slow test
@@ -76,14 +25,7 @@ batch_sz = 2
 
 # Models
 models = [
-    ['unet_baseline',           unet,                 dict(input_size=img_sz, transpose=True)],
-    ['unet_baseline_upsampled', unet,                 dict(input_size=img_sz, transpose=False)],
-    ['unet_ternaus_nopre',      ternausNet16_tweaked, dict(input_size=img_sz, dropout=False, batch_norm=False, pretrained=False)],
-    ['unet_ternaus',            ternausNet16,         dict(input_size=img_sz)],
-    ['unet_ternaus_drop',       ternausNet16_tweaked, dict(input_size=img_sz, dropout=True,  batch_norm=False, pretrained=True)],
-    ['unet_ternaus_bn',         ternausNet16_tweaked, dict(input_size=img_sz, dropout=False, batch_norm=True,  pretrained=True)],
-    ['unet_ternaus_dropbn',     ternausNet16_tweaked, dict(input_size=img_sz, dropout=True,  batch_norm=True,  pretrained=True)],
-    ['unet_pix2pix',            unet_pix2pix, dict(input_size=img_sz)]
+    ['unet_dcunet', DCUNet,  dict(input_size=img_sz)]
 ]
 
 # Data loaders
@@ -100,7 +42,7 @@ training_params = dict(
     train_steps=250, 
     val_steps=100, 
     epochs=20, 
-    iterations=5, 
+    iterations=5,
     lr=1e-4
 )
 
@@ -127,7 +69,7 @@ training_params = dict(
     train_steps=50, 
     val_steps=100, 
     epochs=1, 
-    iterations=20, 
+    iterations=20,
     lr=1e-4
 )
 

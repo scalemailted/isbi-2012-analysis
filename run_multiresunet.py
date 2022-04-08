@@ -42,7 +42,7 @@ training_params = dict(
     train_steps=250, 
     val_steps=100, 
     epochs=20, 
-    iterations=5, 
+    iterations=5,
     lr=1e-4
 )
 
@@ -69,7 +69,7 @@ training_params = dict(
     train_steps=50, 
     val_steps=100, 
     epochs=1, 
-    iterations=20, 
+    iterations=20,
     lr=1e-4
 )
 

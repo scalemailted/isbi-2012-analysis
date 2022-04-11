@@ -150,7 +150,7 @@ def plot_single_performance(models: list, experiment_suffix: str):
         X[discont_indices] = np.nan
         plt.plot(X, df['training_accuracy'])
         #plt.plot(df['epoch'], df['training_accuracy'])
-        plt.plot(df['epoch'], df['validation_accuracy'], color='orange')
+        plt.plot(X, df['validation_accuracy'], color='orange')
         plt.xlabel('epoch')
         plt.ylabel('accuracy')
         plt.axhline(df['validation_accuracy'].max(), linestyle='--', color='gray',

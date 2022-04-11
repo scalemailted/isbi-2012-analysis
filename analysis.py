@@ -145,7 +145,7 @@ def plot_single_performance(models: list, experiment_suffix: str):
         # Compute the difference between successive t2 values
         diffs = np.append(np.diff(X), 0)
         # Find the differences that are greater than pi
-        discont_indices = diffs < -1
+        discont_indices = diffs < 0
         # Set those t2 values to NaN
         X[discont_indices] = np.nan
         plt.plot(X, df['training_accuracy'])

@@ -131,4 +131,37 @@ plt = plot(models, 'val_accuracy', '256px_50steps')
 plt.savefig(f'{assets_pth}/256px_50steps.jpg', format='jpg')
 
 # ----------------------------------------------------
+# [ 11 ]
+
+def plot_single_performance(models: list, experiment_suffix: str):
+    cols = len(models)
+    for i in range(cols):
+        model_name = f'{models[i][0]}'
+        df = pd.read_csv(f'{results_pth}/{model_name}_{experiment_suffix}.csv')
+        df = df.rename(index=str, columns={"accuracy": "training_accuracy", 
+                                        "val_accuracy": "validation_accuracy"})
+        plt.figure(figsize=(10, 5))
+        X = df['epoch'] 
+        # Compute the difference between successive t2 values
+        diffs = np.append(np.diff(X), 0)
+        # Find the differences that are greater than pi
+        discont_indices = diffs < -1
+        # Set those t2 values to NaN
+        X[discont_indices] = np.nan
+        plt.plot(X, df['training_accuracy'])
+        #plt.plot(df['epoch'], df['training_accuracy'])
+        plt.plot(df['epoch'], df['validation_accuracy'], color='orange')
+        plt.xlabel('epoch')
+        plt.ylabel('accuracy')
+        plt.axhline(df['validation_accuracy'].max(), linestyle='--', color='gray',
+                    alpha=0.3)
+        plt.legend()
+        plt.title(f'{model_name}_{experiment_suffix}')
+        plt.savefig(f'{assets_pth}/{model_name}_{experiment_suffix}.jpg',
+                    format='jpg')
+    
+# ----------------------------------------------------
+# [ 12 ]
+plot_single_performance(models, '256px_250steps_20epochs')
+
 

@@ -71,7 +71,7 @@ models = [
 df = pd.read_csv(f'{results_pth}/unet_baseline_512px_500steps_10epochs.csv')
 df = df.rename(index=str, columns={"accuracy": "training_accuracy", 
                                    "val_accuracy": "validation_accuracy"})
-plt.figure(figsize=(8, 5))
+plt.figure(figsize=(10, 5))
 plt.plot(df['epoch'], df['training_accuracy'])
 plt.plot(df['epoch'], df['validation_accuracy'], color='orange')
 plt.xlabel('epoch')
